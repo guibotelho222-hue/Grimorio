@@ -1,4 +1,15 @@
+import sys
+import traceback
+from pathlib import Path
 import flet as ft
+
+# Adiciona o diretório raiz ao sys.path
+ROOT_DIR = Path(__file__).parent.resolve()
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+# Importação direta dos ficheiros que estão na raiz
+import oraculo_tabimport flet as ft
 import sys
 import traceback
 from pathlib import Path
