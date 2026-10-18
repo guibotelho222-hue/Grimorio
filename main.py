@@ -1,4 +1,8 @@
 import sys
+from pathlib import Path
+
+# Adiciona o diretório atual ao sys.path para o Android encontrar theme.py e outros módulos
+sys.path.insert(0, str(Path(__file__).parent.resolve()))import sys
 import os
 from pathlib import Path
 
