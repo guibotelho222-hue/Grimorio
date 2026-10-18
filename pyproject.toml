@@ -1,3 +1,13 @@
+[project]
+name = "grimorio"
+version = "2.0.0"
+description = "Grimorio App v2.0"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flet==0.21.2"
+]
+
 [tool.flet]
 org = "com.grimorio"
 product = "Grimorio"
@@ -5,16 +15,3 @@ product = "Grimorio"
 [tool.flet.app]
 path = "main.py"
 assets_dir = "assets"
-
-[tool.flet.android]
-icon = "assets/icon.png"
-
-# Garante que scripts dentro de pastas sejam incluídos
-[tool.flet.package]
-include = [
-    "*.py",
-    "components/*.py",
-    "components/*/*.py",
-    "tabs/*.py",
-    "assets/*"
-]
