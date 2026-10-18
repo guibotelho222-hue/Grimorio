@@ -3,40 +3,73 @@ import sys
 import traceback
 from pathlib import Path
 
-# Garante o caminho correto dos módulos
+# =========================================================================
+# GARANTE REGISTRO DE CAMINHOS NO ANDROID
+# =========================================================================
 APP_DIR = Path(__file__).parent.resolve()
 if str(APP_DIR) not in sys.path:
     sys.path.insert(0, str(APP_DIR))
 
+# Adiciona diretórios de módulos caso existam
+for folder in ["components", "tabs"]:
+    folder_path = APP_DIR / folder
+    if folder_path.exists() and str(folder_path) not in sys.path:
+        sys.path.insert(0, str(folder_path))
+
 def main(page: ft.Page):
     page.title = "Grimório v2.0 - Rei Joaquim"
     page.theme_mode = ft.ThemeMode.DARK
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.padding = 0
 
     try:
-        # Teste de importação do tema ou módulos para ver se rebenta aqui
-        import theme
-        
-        # Se chegou aqui, a base carregou! Vamos mostrar uma tela de sucesso provisória
-        page.add(
-            ft.Icon(name=ft.icons.SHIELD, size=80, color="amber"),
-            ft.Text("Grimório v2.0 Ativado!", size=22, weight="bold", color="amber"),
-            ft.Text("O motor do Rei Joaquim está online.", size=14, color="white70"),
-            ft.ElevatedButton(
-                "Entrar no Grimório", 
-                on_click=lambda e: page.add(ft.Text("Navegação principal em construção!", color="green"))
-            )
+        # Tenta aplicar o tema customizado se existir em theme.py
+        try:
+            import theme
+            if hasattr(theme, "theme"):
+                page.theme = theme.theme
+            if hasattr(theme, "dark_theme"):
+                page.dark_theme = theme.dark_theme
+        except Exception:
+            pass
+
+        # Limpa a tela para carregar a interface principal
+        page.clean()
+
+        # =================================================================
+        # CARREGAMENTO DAS ABAS PRINCIPAIS DO GRIMÓRIO
+        # =================================================================
+        # Importe e monte suas abas reais aqui (exemplo: oraculo_tab, etc.)
+        import oraculo_tab
+
+        tabs = ft.Tabs(
+            selected_index=0,
+            animation_duration=300,
+            tabs=[
+                ft.Tab(
+                    text="Oráculo",
+                    icon=ft.icons.AUTO_STORIES,
+                    content=oraculo_tab.build_oraculo_tab(page) if hasattr(oraculo_tab, "build_oraculo_tab") else ft.Text("Aba Oráculo")
+                ),
+                # Adicione outras abas do seu projeto conforme necessário
+            ],
+            expand=True
         )
+
+        page.add(tabs)
         page.update()
 
     except Exception as e:
-        # Se houver qualquer erro de código ou importação, ele ESCREVE na tela do telemóvel!
+        # Caso algum módulo específico das abas falhe, mostra exatamente qual foi na tela
         page.clean()
         page.add(
-            ft.Text("FALHA CRÍTICA DE EXECUÇÃO:", color="red", size=18, weight="bold"),
-            ft.Text(str(e), color="yellow", size=12),
-            ft.Text(traceback.format_exc(), color="white70", size=10)
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("ERRO AO CARREGAR ABAS:", color="red", size=18, weight="bold"),
+                    ft.Text(str(e), color="yellow", size=14),
+                    ft.Text(traceback.format_exc(), color="white70", size=10)
+                ]),
+                padding=20
+            )
         )
         page.update()
 
