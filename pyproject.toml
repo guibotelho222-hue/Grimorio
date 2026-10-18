@@ -1,0 +1,28 @@
+[project]
+name = "grimorio"
+version = "2.0.0"
+description = "Grimorio App v2.0"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flet==0.21.2",
+    "pillow>=9.0.0",
+]
+
+[tool.flet]
+org = "com.grimorio"
+product = "Grimorio"
+
+[tool.flet.app]
+path = "main.py"
+assets_dir = "assets"
+
+[tool.flet.android]
+package = "com.grimorio.app"
+version = "2.0.0"
+build_number = 2
+icon = "assets/logo.png"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
